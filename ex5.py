@@ -2,6 +2,13 @@ import json
 import os
 
 
+def get_dict(input_json_path):
+    if not input_json_path.endswith(".json") :
+        raise IOError
+
+    with open(input_json_path,'r') as student_file:
+        students_dict=json.load(student_file)
+    return students_dict
 
 def names_of_registered_students(input_json_path, course_name):
     """
@@ -12,7 +19,18 @@ def names_of_registered_students(input_json_path, course_name):
     :param course_name: The name of the course.
     :return: List of the names of the students.
     """
-    pass
+    students_dict=get_dict(input_json_path)
+    result_list=[]
+    for student_id in students_dict:
+        student_name = students_dict[student_id]["student_name"]
+        student_course_list=students_dict[student_id]["registered_courses"]
+        if course_name in student_course_list:
+            result_list.append(student_name)
+    print(result_list)
+    return result_list
+
+
+
 
 
 def enrollment_numbers(input_json_path, output_file_path):
@@ -23,7 +41,20 @@ def enrollment_numbers(input_json_path, output_file_path):
     :param input_json_path: Path of the students database json file.
     :param output_file_path: Path of the output text file.
     """
-    pass
+    students_dict=get_dict(input_json_path)
+    courses_list=[]
+    num_dict = {}
+    end_line="\n"
+    for student_id in students_dict:
+        student_course_list=students_dict[student_id]["registered_courses"]
+        for course in student_course_list:
+            if course not in courses_list:
+                courses_list.append(course)
+    courses_list=sorted(courses_list)
+    with open(output_file_path,'w') as out_file:
+            for course in courses_list:
+                num_students=len(names_of_registered_students(input_json_path, course))
+                out_file.write('"'+course+'" '+str(num_students)+end_line)  
 
 
 
@@ -35,6 +66,3 @@ def courses_for_lecturers(json_directory_path, output_json_path):
     :param output_json_path: Path of the output json file.
     """
     pass
-
-
-
