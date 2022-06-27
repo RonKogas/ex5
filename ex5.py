@@ -3,9 +3,6 @@ import os
 
 
 def get_dict(input_json_path):
-    if not input_json_path.endswith(".json") :
-        raise IOError
-
     with open(input_json_path,'r') as student_file:
         students_dict=json.load(student_file)
     return students_dict
@@ -26,11 +23,7 @@ def names_of_registered_students(input_json_path, course_name):
         student_course_list=students_dict[student_id]["registered_courses"]
         if course_name in student_course_list:
             result_list.append(student_name)
-    print(result_list)
     return result_list
-
-
-
 
 
 def enrollment_numbers(input_json_path, output_file_path):
@@ -55,7 +48,6 @@ def enrollment_numbers(input_json_path, output_file_path):
             for course in courses_list:
                 num_students=len(names_of_registered_students(input_json_path, course))
                 out_file.write('"'+course+'" '+str(num_students)+end_line)  
-
 
 
 def courses_for_lecturers(json_directory_path, output_json_path):
