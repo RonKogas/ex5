@@ -9,7 +9,6 @@ file_extension = ".json"
 tab_spacecs = 4
 
 
-
 def get_dict(input_json_path):
     with open(input_json_path,'r') as student_file:
         students_dict=json.load(student_file)
