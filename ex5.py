@@ -1,6 +1,14 @@
 import json
 import os
 
+students_name_key = "student_name"
+registered_courses_key = "registered_courses"
+course_name_key = "course_name"
+lecturers_key = "lecturers"
+file_extension = ".json"
+tab_spacecs = 4
+
+
 
 def get_dict(input_json_path):
     with open(input_json_path,'r') as student_file:
@@ -19,8 +27,8 @@ def names_of_registered_students(input_json_path, course_name):
     students_dict=get_dict(input_json_path)
     result_list=[]
     for student_id in students_dict:
-        student_name = students_dict[student_id]["student_name"]
-        student_course_list=students_dict[student_id]["registered_courses"]
+        student_name = students_dict[student_id][students_name_key]
+        student_course_list=students_dict[student_id][registered_courses_key]
         if course_name in student_course_list:
             result_list.append(student_name)
     return result_list
@@ -39,7 +47,7 @@ def enrollment_numbers(input_json_path, output_file_path):
     num_dict = {}
     end_line="\n"
     for student_id in students_dict:
-        student_course_list=students_dict[student_id]["registered_courses"]
+        student_course_list=students_dict[student_id][registered_courses_key]
         for course in student_course_list:
             if course not in courses_list:
                 courses_list.append(course)
@@ -57,19 +65,19 @@ def courses_for_lecturers(json_directory_path, output_json_path):
     :param json_directory_path: Path of the semsters_data files.
     :param output_json_path: Path of the output json file.
     """
-    json_files = [file for file in os.listdir(json_directory_path) if file.endswith(".json")]
+    json_files = [file for file in os.listdir(json_directory_path) if file.endswith(file_extension)]
     lecturer_courses_dict = {}
     for file in json_files:
         file_path = os.path.join(json_directory_path, file)
         with open(file_path, "r") as curr_file:
             curr_courses_dict = json.load(curr_file)
         for course_id in curr_courses_dict:
-            course_name = curr_courses_dict[course_id]["course_name"]
-            lecturers_list = curr_courses_dict[course_id]["lecturers"]
+            course_name = curr_courses_dict[course_id][course_name_key]
+            lecturers_list = curr_courses_dict[course_id][lecturers_key]
             for lecturer in lecturers_list:
                 if lecturer not in lecturer_courses_dict:
                     lecturer_courses_dict[lecturer] = [course_name]
                 if course_name not in lecturer_courses_dict[lecturer]:
                     lecturer_courses_dict[lecturer].append(course_name)
     with open(output_json_path,'w') as out_file:
-            json.dump(lecturer_courses_dict, out_file, indent=4)
+            json.dump(lecturer_courses_dict, out_file, indent=tab_spacecs)
